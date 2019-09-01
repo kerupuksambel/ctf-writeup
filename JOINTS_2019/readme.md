@@ -25,8 +25,8 @@ Flag : `JOINTS19{pYTh0n2_1nPuT_15_3ViL_8190fe72}`
 ## Kapital
 **Deskripsi :**
 
-Ayo ngegas di shell
 flag ada di /flag.txt
+Ayo ngegas di shell
 
 `nc ctf.joints.id 30002`
 
