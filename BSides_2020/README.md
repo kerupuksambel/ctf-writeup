@@ -97,7 +97,7 @@ As the title, the first thing we saw is the `robots.txt` file. We found an inter
 
 Opening `cookie.php` revealing us some interesting cookies.
 
-![](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/BSides_2020/img/Log_2.png) 
+![](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/BSides_2020/img/Robot_2.png) 
 
 #### Cookie Unifying
 Trying to google the value of `Our_Favourite_Cookie` tells us that the value is actually a SHA256 hash of 'O'. Then, when we change the value of `Piece`, we got a different hash. Realizing that this maybe is a SHA256 of an individual letter of a flag, we tried to automate the process. Here's the script we craft to request every hash piece of the flag.
