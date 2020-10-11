@@ -2,18 +2,20 @@
 ## Description
 
 GET the right file.
+
 Author: Ph03N1X
+
 [Link](http://3.7.251.179/) 
 
 ## Solution
 #### Recon
 First, we opened the website, there we given lots of links. But when we clicked on most of the link, we were greeted with an error page. After some observation, we realized that there is a link that's different with another link.
 
-![](/home/kerupuksambel/CTF/ctf-writeup/BSides_2020/img/Log_1.png) 
+![](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/BSides_2020/img/Log_1.png) 
 
 Clicking on that link would redirect us to a different page :
 
-![](/home/kerupuksambel/CTF/ctf-writeup/BSides_2020/img/Log_2.png).
+![](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/BSides_2020/img/Log_2.png).
 
 We also learned some things in this phase :
 - There are some files that we can't get (.htaccess would return 403 Forbidden)
@@ -24,7 +26,7 @@ After that, we spent some times figuring what to do next. With the hint in the t
 
 We tried the word 'file' as parameter to include file, and it works!
 
- ![](/home/kerupuksambel/CTF/ctf-writeup/BSides_2020/img/Log_3.png) 
+ ![](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/BSides_2020/img/Log_3.png) 
  
 #### Journey to RCE
 
@@ -32,13 +34,13 @@ Okay, so far we can do LFI, but no sign of flag here... So we assumed that we ha
 
 Finally, we tried a RCE by using Apache log file. There are two types of Apache log file : **access.log** (For logging successful requests) and **error.log** (For logging failed requests). But, when we include access.log, we were failed because the file isn't exist. So, we tried to include error.log and it worked. 
 
-![](/home/kerupuksambel/CTF/ctf-writeup/BSides_2020/img/Log_4.png) 
+![](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/BSides_2020/img/Log_4.png) 
 
 #### Triggering error.log
 
 So next we have to trigger error.log to log our failed request. We can do it by requesting .htaccess. But how to log our crafted request?
 
-Turns out, it was possible to request .htaccess**[ABRITRARY_STRING]** to trigger the logging. So we successfully logged our crafted request. 
+Turns out, it was possible to request .htaccess[ABRITRARY_STRING] to trigger the logging. So we successfully logged our crafted request. 
 
 Here's a script that automated our request.
 
@@ -72,7 +74,7 @@ Let's try another approach. How if we do a path traversal to find the flag with 
 
 Long story short, after some path traversals, we found an interesting file in `/f/l/a/g/somethingUneed.txt`. And including it in our LFI will return our flag.
 
-![](/home/kerupuksambel/CTF/ctf-writeup/BSides_2020/img/Log_5.png) 
+![](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/BSides_2020/img/Log_5.png) 
 
 **Flag** :  `BSDCTF{L0cal_f1L3_InClu$10N_1$_v3RY_P015On0u$} `
 
@@ -83,17 +85,19 @@ Long story short, after some path traversals, we found an interesting file in `/
 ## Description
 
 You know what to do, collect them all.
+
 Author: Ph03N1X
+
 [Link](http://15.206.202.26/) 
 
 ## Solution
 #### Recon
 As the title, the first thing we saw is the `robots.txt` file. We found an interesting file in /cookie.php
-![](/home/kerupuksambel/CTF/ctf-writeup/BSides_2020/img/Robot_1.png) 
+![](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/BSides_2020/img/Robot_1.png) 
 
 Opening `cookie.php` revealing us some interesting cookies.
 
-![](/home/kerupuksambel/CTF/ctf-writeup/BSides_2020/img/Robot_2.png) 
+![](https://raw.githubusercontent.com/kerupuksambel/ctf-writeup/master/BSides_2020/img/Log_2.png) 
 
 #### Cookie Unifying
 Trying to google the value of `Our_Favourite_Cookie` tells us that the value is actually a SHA256 hash of 'O'. Then, when we change the value of `Piece`, we got a different hash. Realizing that this maybe is a SHA256 of an individual letter of a flag, we tried to automate the process. Here's the script we craft to request every hash piece of the flag.
@@ -116,7 +120,7 @@ Trying to google the value of `Our_Favourite_Cookie` tells us that the value is 
 	for i in range(50):
 		cookie = {
 			"Piece" : str(i),
-			"Our_Fav_Cookie" : "crot"
+			"Our_Fav_Cookie" : "rinrin!"
 		}
 		r = requests.get(link, cookies=cookie)
 	
@@ -128,49 +132,7 @@ Trying to google the value of `Our_Favourite_Cookie` tells us that the value is 
 		print(flag)
 
 After running the script, we realized there's a flag-like string on the result, 
-
->O
-OF
-OFQ
-OFQP
-OFQPG
-OFQPGS
-OFQPGS{
-OFQPGS{P
-OFQPGS{P0
-OFQPGS{P00
-OFQPGS{P00x
-OFQPGS{P00x1
-OFQPGS{P00x13
-OFQPGS{P00x135
-OFQPGS{P00x135_
-OFQPGS{P00x135_n
-OFQPGS{P00x135_ne
-OFQPGS{P00x135_ne3
-OFQPGS{P00x135_ne3_
-OFQPGS{P00x135_ne3_o
-OFQPGS{P00x135_ne3_o3
-OFQPGS{P00x135_ne3_o35
-OFQPGS{P00x135_ne3_o35g
-OFQPGS{P00x135_ne3_o35g_
-OFQPGS{P00x135_ne3_o35g_c
-OFQPGS{P00x135_ne3_o35g_cy
-OFQPGS{P00x135_ne3_o35g_cy4
-OFQPGS{P00x135_ne3_o35g_cy4p
-OFQPGS{P00x135_ne3_o35g_cy4p3
-OFQPGS{P00x135_ne3_o35g_cy4p3_
-OFQPGS{P00x135_ne3_o35g_cy4p3_7
-OFQPGS{P00x135_ne3_o35g_cy4p3_70
-OFQPGS{P00x135_ne3_o35g_cy4p3_70_
-OFQPGS{P00x135_ne3_o35g_cy4p3_70_p
-OFQPGS{P00x135_ne3_o35g_cy4p3_70_pu
-OFQPGS{P00x135_ne3_o35g_cy4p3_70_pu3
-OFQPGS{P00x135_ne3_o35g_cy4p3_70_pu3p
-OFQPGS{P00x135_ne3_o35g_cy4p3_70_pu3px
-OFQPGS{P00x135_ne3_o35g_cy4p3_70_pu3px}
-OFQPGS{P00x135_ne3_o35g_cy4p3_70_pu3px}O
-OFQPGS{P00x135_ne3_o35g_cy4p3_70_pu3px}OO
-OFQPGS{P00x135_ne3_o35g_cy4p3_70_pu3px}OOO
+> OFQPGS{P00x135_ne3_o35g_cy4p3_70_pu3px}
 
 Shifting the string with Caesar cipher with N = 13 giving us our flag.
 
