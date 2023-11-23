@@ -149,6 +149,7 @@ nol=int(False);satu=int(True);dua=satu+satu;tiga=satu+dua;empat=satu+tiga;lima=s
 ```
 
 Copying to the jail terminal and we got the flag.
+
 ![flag](images/1.png)
 
 <!-- this problem could be solved simply by breakpoint(), dumb me but ok i guess -->
